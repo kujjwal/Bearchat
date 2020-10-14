@@ -8,23 +8,15 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-//DB represents the connection to the MySQL database
-var (
-	DB *sql.DB
-)
+var DB *sql.DB
 
-//InitDB creates the MySQL database connection
 func InitDB() *sql.DB {
 
 	log.Println("attempting connections")
 
 	var err error
-	
-	// Open a SQL connection to the docker container hosting the database server
-	// Assign the connection to the "DB" variable
-	// Look at how it's done in the other microservices!
-	// "YOUR CODE HERE"
-	
+	DB, err = sql.Open("mysql", "root:root@tcp(172.28.1.2:3306)/postsDB?parseTime=true")
+
 	if err != nil {
 		log.Println("couldnt connect")
 		panic(err.Error())
