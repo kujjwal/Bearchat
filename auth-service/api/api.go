@@ -64,7 +64,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 
 	//Check if the username already exists
 	var exists bool
-	err = DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE username=$1)", credentials.Username).Scan(&exists)
+	err = DB.QueryRow("SELECT exists (SELECT * FROM users WHERE username=?)", credentials.Username).Scan(&exists)
 	
 	//Check for error
 	if err != nil {
@@ -82,7 +82,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 
 	//Check if the email already exists
 	// YOUR CODE HERE
-	err = DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)", credentials.Email).Scan(&exists)
+	err = DB.QueryRow("SELECT exists (SELECT * FROM users WHERE email=?)", credentials.Email).Scan(&exists)
 	
 	//Check for error
 	// YOUR CODE HERE
@@ -120,7 +120,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	verificationToken := GetRandomBase62(verifyTokenSize)
 
 	//Store credentials in database
-	_, err = DB.Query("INSERT INTO users (username, email, hashedPassword, verifiedToken, userId) VALUES ($1, $2, $3, $4, $5)", 
+	_, err = DB.Query("INSERT INTO users (username, email, hashedPassword, verifiedToken, userId) VALUES (?, ?, ?, ?, ?)",
 		credentials.Username, credentials.Email, hash, verificationToken, userId)
 	
 	//Check for errors in storing the credentials
@@ -227,9 +227,10 @@ func signin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Get the hashedPassword and userId of the user
+	//TODO: Check if signin only occurs with email, or also with username – written for only email now
 	var hashedPassword, userID string
-	err = DB.QueryRow("SELECT hashedPassword, userId FROM users WHERE email = $1 AND username = $2",
-		credentials.Email, credentials.Username).Scan(&hashedPassword, &userID)
+	err = DB.QueryRow("SELECT hashedPassword, userId FROM users WHERE email=?", credentials.Email).
+		Scan(&hashedPassword, &userID)
 	// process errors associated with emails
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -352,7 +353,7 @@ func verify(w http.ResponseWriter, r *http.Request) {
 
 	//Obtain the user with the verifiedToken from the query parameter and set their verification status to the integer "1"
 	// TODO: Perhaps implement a check that this only updates one row?
-	_, err := DB.Exec("UPDATE users SET verified=1 WHERE verifiedToken=$1", token)
+	_, err := DB.Exec("UPDATE users SET verified=1 WHERE verifiedToken=?", token)
 
 	//Check for errors in executing the previous query
 	// "YOUR CODE HERE"
@@ -401,7 +402,7 @@ func sendReset(w http.ResponseWriter, r *http.Request) {
 	token := GetRandomBase62(resetTokenSize)
 
 	//Obtain the user with the specified email and set their resetToken to the token we generated
-	_, err = DB.Query("UPDATE users SET resetToken=$1 WHERE email=$2", token/*YOUR CODE HERE*/, credentials.Email/*YOUR CODE HERE*/)
+	_, err = DB.Query("UPDATE users SET resetToken=? WHERE email=?", token/*YOUR CODE HERE*/, credentials.Email/*YOUR CODE HERE*/)
 	
 	//Check for errors executing the queries
 	// "YOUR CODE HERE"
@@ -464,7 +465,7 @@ func resetPassword(w http.ResponseWriter, r *http.Request) {
 	password := credentials.Password
 	var exists bool
 	//check if the username and token pair exist
-	err = DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE username=$1 AND verifiedToken=$2)", username, token).Scan(&exists)
+	err = DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE username=? AND verifiedToken=?)", username, token).Scan(&exists)
 
 	//Check for errors executing the query
 	// "YOUR CODE HERE"
@@ -494,7 +495,7 @@ func resetPassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//input new password and clear the reset token (set the token equal to empty string)
-	_, err = DB.Exec("UPDATE users SET hashedPassword=$1, resetToken=$2 WHERE email=$3", hash/*YOUR CODE HERE*/, ""/*YOUR CODE HERE*/, email/*YOUR CODE HERE*/)
+	_, err = DB.Exec("UPDATE users SET hashedPassword=?, resetToken=? WHERE email=?", hash/*YOUR CODE HERE*/, ""/*YOUR CODE HERE*/, email/*YOUR CODE HERE*/)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		log.Print(err.Error())

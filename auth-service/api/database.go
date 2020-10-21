@@ -28,7 +28,7 @@ func InitDB() *sql.DB {
 	ipAddress := "tcp(172.28.1.2:3306)"
 	dbName := "/auth"
 	// "YOUR CODE HERE"
-	DB, err := sql.Open(dbType, username+":"+password+"@"+ipAddress+dbName)
+	DB, err = sql.Open(dbType, username+":"+password+"@"+ipAddress+dbName)
 
 	if err != nil {
 		log.Println("couldn't connect")
