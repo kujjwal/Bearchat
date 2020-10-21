@@ -3,7 +3,6 @@ package api
 import (
 	"database/sql"
 	"log"
-
 	//MySQL driver
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -29,16 +28,16 @@ func InitDB() *sql.DB {
 	ipAddress := "tcp(172.28.1.2:3306)"
 	dbName := "/auth"
 	// "YOUR CODE HERE"
-	DB, err = sql.Open(dbType, username+":"+password+"@"+ipAddress+dbName)
+	DB, err := sql.Open(dbType, username+":"+password+"@"+ipAddress+dbName)
 
 	if err != nil {
-		log.Println("couldnt connect")
+		log.Println("couldn't connect")
 		panic(err.Error())
 	}
 
 	err = DB.Ping()
 	if err != nil {
-		log.Println("couldnt ping")
+		log.Println("couldn't ping")
 		panic(err.Error())
 	}
 

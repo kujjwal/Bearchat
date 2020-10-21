@@ -12,4 +12,6 @@ require (
 	github.com/sendgrid/sendgrid-go v3.6.2+incompatible
 	github.com/stretchr/testify v1.5.1 // indirect
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a
+	// github.com/gomodule/redigo v1.8.2
+	// github.com/gorilla/handlers v1.5.1
 )
