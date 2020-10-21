@@ -5,7 +5,7 @@ import (
 	"net/http"
 	_ "net/http"
 
-	"github.com/BearCloud/fa20-project-dev/backend/auth-service/api"
+	"github.com/BearCloud/fa20-project-ujjy/backend/auth-service/api"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
