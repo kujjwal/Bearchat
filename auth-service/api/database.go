@@ -19,7 +19,7 @@ func InitDB() *sql.DB {
 	log.Println("attempting connections")
 
 	var err error
-	
+
 	// Open a SQL connection to the docker container hosting the database server
 	// Assign the connection to the "DB" variable
 	// Look at how it's done in the other microservices!
@@ -29,7 +29,8 @@ func InitDB() *sql.DB {
 	ipAddress := "tcp(172.28.1.2:3306)"
 	dbName := "/auth"
 	// "YOUR CODE HERE"
-	
+	DB, err = sql.Open(dbType, username+":"+password+"@"+ipAddress+dbName)
+
 	if err != nil {
 		log.Println("couldnt connect")
 		panic(err.Error())
