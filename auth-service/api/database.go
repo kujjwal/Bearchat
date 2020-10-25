@@ -3,6 +3,8 @@ package api
 import (
 	"database/sql"
 	"log"
+	"time"
+
 	//MySQL driver
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -29,16 +31,17 @@ func InitDB() *sql.DB {
 	dbName := "/auth"
 	// "YOUR CODE HERE"
 	DB, err = sql.Open(dbType, username+":"+password+"@"+ipAddress+dbName)
-
 	if err != nil {
-		log.Println("couldn't connect")
+		log.Println("error opening DB connection")
 		panic(err.Error())
 	}
 
 	err = DB.Ping()
-	if err != nil {
-		log.Println("couldn't ping")
-		panic(err.Error())
+	for err != nil {
+		log.Println("couldnt connect, waiting 10 seconds before retrying")
+		time.Sleep(10*time.Second)
+		// Connect again, use the same connection function as you did above ^
+		err = DB.Ping()
 	}
 
 	return DB
