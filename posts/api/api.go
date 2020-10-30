@@ -4,11 +4,11 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"github.com/google/uuid"
+	_ "github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"strconv"
+	_ "strconv"
 	"time"
 )
 
@@ -16,10 +16,10 @@ import (
 func RegisterRoutes(router *mux.Router) error {
 	// Why don't we put options here? Check main.go :)
 
-	router.HandleFunc("/api/posts/{startIndex}", getFeed).Methods(/* YOUR CODE HERE */) 
-	router.HandleFunc("/api/posts/{uuid}/{startIndex}", getPosts).Methods(/* YOUR CODE HERE */)
-	router.HandleFunc("/api/posts/create", createPost).Methods(/* YOUR CODE HERE */)
-	router.HandleFunc("/api/posts/delete/{postID}", deletePost).Methods(/* YOUR CODE HERE */)
+	router.HandleFunc("/api/posts/{startIndex}", getFeed).Methods(http.MethodGet)
+	router.HandleFunc("/api/posts/{uuid}/{startIndex}", getPosts).Methods(http.MethodGet)
+	router.HandleFunc("/api/posts/create", createPost).Methods(http.MethodPost)
+	router.HandleFunc("/api/posts/delete/{postID}", deletePost).Methods(http.MethodDelete)
 
 	return nil
 }
@@ -29,12 +29,14 @@ func getUUID(w http.ResponseWriter, r *http.Request) (uuid string) {
 	if err != nil {
 		http.Error(w, errors.New("error obtaining cookie: " + err.Error()).Error(), http.StatusBadRequest)
 		log.Print(err.Error())
+		return
 	}
 	//validate the cookie
 	claims, err := ValidateToken(cookie.Value)
 	if err != nil {
 		http.Error(w, errors.New("error validating token: " + err.Error()).Error(), http.StatusUnauthorized)
 		log.Print(err.Error())
+		return
 	}
 	log.Println(claims)
 
@@ -43,16 +45,22 @@ func getUUID(w http.ResponseWriter, r *http.Request) (uuid string) {
 
 func getPosts(w http.ResponseWriter, r *http.Request) {
 
-	// Load the uuid and startIndex from the url paramater into their own variables
+	// Load the uuid and startIndex from the url parameter into their own variables
 	// Look at mux.Vars() ... -> https://godoc.org/github.com/gorilla/mux#Vars
 	// make sure to use "strconv" to convert the startIndex to an integer!
 	// YOUR CODE HERE
-
+	requestVars := mux.Vars(r)
+	startIndex := requestVars["startIndex"]
+	UUID := requestVars["uuid"]
 
 	// Check if the user is authorized
 	// First get the uuid from the access_token (see getUUID())
 	// Compare that to the uuid we got from the url parameters, if they're not the same, return an error http.StatusUnauthorized
 	// YOUR CODE HERE
+	if UUID != getUUID(w, r) {
+		http.Error(w, errors.New("incorrect UUID, unauthorized post access").Error(), http.StatusUnauthorized)
+		return
+	}
 	
 	var posts *sql.Rows
 	var err error
