@@ -1,11 +1,17 @@
-import unittest
 import requests
-import subprocess
-import time
-import sys
+
+user_cookies = None
+user2_cookies = None
+feed = []
+postID = None
+userID = None
+postID2 = None
+userID2 = None
+
 
 def fail(msg):
     print('error:', msg)
+
 
 def main():
     url = "http://localhost:80/api/auth/signup"
@@ -36,6 +42,7 @@ def main():
     test_delete()
     print('Finished posts delete tests')
 
+
 def test_create():
     url = "http://localhost:81/api/posts/create"
     payload = {'postBody': 'test content'}
@@ -49,11 +56,13 @@ def test_create():
     if response.status_code != 201:
         fail('expected status code 201 but was {}'.format(response.status_code))
 
+
 def test_feed():
     url = "http://localhost:81/api/posts/0"
     response = requests.get(url, cookies=user_cookies)
     if response.status_code != 200:
         fail('expected status code 200 but was {}'.format(response.status_code))
+    global feed
     feed = response.json()
     if len(feed) != 1:
         fail('expected feed length 1 but was {}'.format(len(feed)))
@@ -83,6 +92,7 @@ def test_feed():
     postID = post['postID']
     global userID
     userID = post['AuthorID']
+
 
 def test_get():
     url = "http://localhost:81/api/posts/{}/0".format(userID)
@@ -119,6 +129,7 @@ def test_get():
     if post['AuthorID'] != userID2:
         fail('user ID mismatch on recents: expected {}, was {}'.format(userID2, post['AuthorID']))
 
+
 def test_delete():
     url = "http://localhost:81/api/posts/delete/{}".format(postID2)
     response = requests.delete(url, cookies=user_cookies)
@@ -134,6 +145,7 @@ def test_delete():
     response = requests.delete(url, cookies=user2_cookies)
     if response.status_code != 200:
         fail('expected status code 200 but was {}'.format(response.status_code))
+
 
 if __name__ == '__main__':
     main()
