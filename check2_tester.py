@@ -53,6 +53,8 @@ def test_signin():
     url = "http://localhost:80/api/auth/signup"
     payload = {'username': 'test_user2', 'email': 'test_email2@berkeley.edu', 'password': 'test_password2'}
     response = requests.post(url, json=payload)
+    if response.status_code != 201:
+        fail('expected status code 201 but was {}'.format(response.status_code))
 
     url = "http://localhost:80/api/auth/signin"
     payload = {'username': 'test_user2', 'email': 'test_email2@berkeley.edu', 'password': 'test_password2'}
