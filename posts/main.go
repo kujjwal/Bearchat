@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/BearCloud/fa20-project-dev/backend/posts/api"
+	"github.com/BearCloud/fa20-project-ujjy/backend/posts/api"
 	"github.com/gorilla/mux"
 )
 

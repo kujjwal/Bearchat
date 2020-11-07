@@ -38,7 +38,7 @@ func InitDB() *sql.DB {
 
 	err = DB.Ping()
 	for err != nil {
-		log.Println("couldnt connect, waiting 20 seconds before retrying")
+		log.Println("couldn't connect, waiting 20 seconds before retrying")
 		time.Sleep(20*time.Second)
 		// Connect again, use the same connection function as you did above ^
 		err = DB.Ping()

@@ -1,4 +1,4 @@
-module github.com/BearCloud/fa20-project-dev/backend/profile
+module github.com/BearCloud/fa20-project-ujjy/backend/profile
 
 go 1.15
 
