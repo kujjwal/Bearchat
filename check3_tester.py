@@ -101,7 +101,7 @@ def test_get():
         fail('expected status code 200 but was {}'.format(response.status_code))
     recents = response.json()
     if len(recents) != 1:
-        fail('expected recents length 1 but was {}'.format(len(feed)))
+        fail('expected recents length 1 but was {}'.format(len(recents)))
     post = recents[0]
     if 'postID' not in post:
         fail('postID missing from post on recents')
