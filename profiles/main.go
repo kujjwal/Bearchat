@@ -29,6 +29,7 @@ func main() {
 		log.Fatal("Error registering API endpoints")
 	}
 
+	log.Println("connected profiles-service")
 	http.ListenAndServe(":80", router)
 }
 

@@ -11,7 +11,7 @@ services:
                 ipv4_address:
                     172.28.1.1
         depends_on:
-            - db-server
+          - db-server
 
         expose:
             - '80'
@@ -42,7 +42,8 @@ services:
                 ipv4_address:
                     172.28.1.3
         depends_on:
-            - db-server
+        - db-server
+
         expose:
             - '80'
 
@@ -51,13 +52,14 @@ services:
         container_name: profiles-service
         restart: on-failure
         ports:
-            - "82:80"
+        - "82:80"
         networks:
             bearchat:
                 ipv4_address:
                     172.28.1.4
-        depends_on:
-            - db-server
+        depends_on: 
+        - db-server
+
         expose:
             - '80'
 
