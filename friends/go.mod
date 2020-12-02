@@ -1,4 +1,4 @@
-module github.com/BearCloud/fa20-project-dev/backend/friends
+module github.com/BearCloud/fa20-project-ujjy/backend/friends
 
 go 1.15
 

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	_ "net/http"
 
-	"github.com/BearCloud/fa20-project-dev/backend/friends/api"
+	"github.com/BearCloud/fa20-project-ujjy/backend/friends/api"
 	"github.com/gorilla/mux"
 )
 
